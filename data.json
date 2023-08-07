@@ -1,0 +1,25 @@
+{
+    "query": "SELECT p.product_name, s.total_sales FROM product_table p JOIN sales_table s ON p.id = s.product_id;",
+    "joins_list": [
+      {
+        "table_name": "product_table",
+        "column_name": "id"
+      },
+      {
+        "table_name": "sales_table",
+        "column_name": "product_id"
+      }
+    ],
+    "output_table": [
+      {
+        "column_name": "product_name",
+        "column_type": "string",
+        "nullable": "NO"
+      },
+      {
+        "column_name": "total_sales",
+        "column_type": "integer",
+        "nullable": "NO"
+      }
+    ]
+}  

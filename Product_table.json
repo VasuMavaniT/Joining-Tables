@@ -1,0 +1,22 @@
+[
+    {
+        "column_name": "id",
+        "column_type": "integer",
+        "nullable": "YES"
+    },
+    {
+        "column_name": "product_name",
+        "column_type": "string",
+        "nullable": "NO"
+    },
+    {
+        "column_name": "product_price",
+        "column_type": "string",
+        "nullable": "NO"
+    },
+    {
+        "column_name": "product_in_stock",
+        "column_type": "boolean",
+        "nullable": "NO"
+    }
+]

@@ -1,0 +1,17 @@
+[
+    {
+        "column_name": "id",
+        "column_type": "integer",
+        "nullable": "YES"
+    },
+    {
+        "column_name": "product_id",
+        "column_type": "integer",
+        "nullable": "NO"
+    },
+    {
+        "column_name": "total_sales",
+        "column_type": "integer",
+        "nullable": "NO"
+    }
+]
