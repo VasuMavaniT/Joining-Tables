@@ -1,12 +1,12 @@
 import React from 'react';
 import { MarkerType, Position } from 'reactflow';
-import jsondata from '../Data/data.json'; 
-import product_data from '../Data/product_table.json';
-import sales_data from '../Data/sales_table.json';
+// import jsondata from '../Data/data.json'; 
+// import product_data from '../Data/product_table.json';
+// import sales_data from '../Data/sales_table.json';
 
-console.log("jsondata:", jsondata);
-const output_data = jsondata["output_table"];
-console.log("output_data:", output_data);
+// console.log("jsondata:", jsondata);
+// const output_data = jsondata["output_table"];
+// console.log("output_data:", output_data);
 
 export const errorNodes = [
   {

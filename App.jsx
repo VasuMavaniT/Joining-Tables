@@ -7,15 +7,10 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
 } from 'reactflow';
-import { Modal } from 'antd';
-import { fetch_product_data, fetch_sales_data, fetch_output_data, fetch_join_data, fetch_query_data } from './Data/Scripts';
-import jsondata from './Data/data.json';
+import { fetch_table_data, fetch_product_data, fetch_sales_data, fetch_output_data, fetch_join_data, fetch_query_data } from './Data/Scripts';
+// import jsondata from './Data/data.json';
 
-const fetchDataFromBackend = () => {
-  console.log("Fetching data from backend");
-}
-
-const { query_data } = jsondata["query"];
+const proOptions = { hideAttribution: true };
 
 import { nodes as initialNodes, edges as initialEdges, errorNodes } from './Nodes/initial-elements';
 import CustomNode from './Nodes/CustomNode';
@@ -30,10 +25,6 @@ const nodeTypes = {
 const minimapStyle = {
   height: 120,
 };
-
-// const product_data = fetch_product_data();
-// const sales_data = fetch_sales_data();
-// const output_data = fetch_output_data(product_data, sales_data);
 
 const onInit = (reactFlowInstance) => console.log('flow loaded:', reactFlowInstance);
 
@@ -51,150 +42,105 @@ const OverviewFlow = () => {
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
-  // useEffect(() => {
-  //   console.log("Fetching data from backend");
-  //   fetch_product_data().then((data) => {
-  //     console.log("product_data:", data);
-  //     // setProductData(data);
-  //   });
-  //   fetch_sales_data().then((data) => {
-  //     console.log("sales_data:", data);
-  //     // setSalesData(data);
-  //   }
-  //   );
-  //   fetch_output_data().then((data) => {
-  //     console.log("output_data:", data);
-  //     // setOutputData(data);
-  //   }
-  //   );
-  //   fetch_join_data().then((data) => {
-  //     console.log("join_data:", data);
-  //     // setJoinData(data);
-  //   }
-  //   );
-  //   fetch_query_data().then((data) => {
-  //     console.log("query_data:", data);
-  //     // setQueryData(data);
-  //   }
-  //   );
+  useEffect(() => {
+    // Fetch all the necessary data using Promise.all
+    const str1 = "product_table";
+    const str2 = "sales_table";
+    fetch_table_data(str1, str2)
+    .then((data) => {
+      console.log("data fetched from function is:", data);
+      // Update the state with the fetched data
 
-  //   console.log("Fetching data from backend complete");
-  //   // Modify the existing nodes based on current data
+      const productdata = data.product_table;
+      const salesdata = data.sales_table;
+      const outputdata = data.output_table;
+      const joindata = data.joins_list;
+      const querydata = data.query;
+      
+      // setProductData(data.table1);
+      // setSalesData(data.table2);
+      // setOutputData(data.output_table);
+      // setJoinData(data.joins_list);
+      // setQueryData(data.query);
+      console.log("product_data:", productdata);
+      console.log("sales_data:", salesdata);
+      console.log("output_data:", outputdata);
+      console.log("join_data:", joindata);
+      console.log("query_data:", querydata);
 
-  //   const updatedNodes = nodes.map((node) => {
-  //     if (node.id === 'product_table') {
-  //       node.data = product_data;
-  //       console.log("Updating product table data");
-  //     }
-  //     else if (node.id === 'sales_table') {
-  //       node.data = sales_data;
-  //       console.log("Updating sales table data");
-  //     }
-  //     else if (node.id === 'output_table') {
-  //       node.data = output_data;
-  //       console.log("Updating output table data");
-  //     }
-  //     else if (node.id === 'Merge') {
-  //       node.data = join_data;
-  //       console.log("Updating join table data");
-  //     }
+      // Modify the existing nodes based on the current data
+      const updatedNodes = nodes.map((node) => {
+        if (node.id === 'product_table') {
+          node.data = productdata;
+        } else if (node.id === 'sales_table') {
+          node.data = salesdata;
+        } else if (node.id === 'Output') {
+          node.data = outputdata;
+        } else if (node.id === 'Merge') {
+          // Concat data of join and query
+          // node.data = joinData.concat(queryData);
+          node.data = joindata;
+          const queryDataObject = {
+            "Query": querydata
+          };
+          node.data.push(queryDataObject);
+          // node.data["query"] = querydata;
+          {console.log("Value of node.data is:", node.data)}
+          setJoinData(node.data);
+        }
 
-  //     return node;
-  //   });
+        return node;
+      });
 
-  //   setNodes(updatedNodes);
-
-  // }, []);
-
-  // Inside OverviewFlow component
-
-useEffect(() => {
-  console.log("Fetching data from backend");
-
-  // Fetch all the necessary data using Promise.all
-  Promise.all([
-    fetch_product_data(),
-    fetch_sales_data(),
-    fetch_output_data(),
-    fetch_join_data(),
-    fetch_query_data()
-  ]).then(([productData, salesData, outputData, joinData, queryData]) => {
-    console.log("product_data:", productData);
-    console.log("sales_data:", salesData);
-    console.log("output_data:", outputData);
-    console.log("join_data:", joinData);
-    console.log("query_data:", queryData);
-
-    // Update the state with the fetched data
-    setProductData(productData);
-    setSalesData(salesData);
-    setOutputData(outputData);
-    setJoinData(joinData);
-    setQueryData(queryData);
-
-    console.log("Fetching data from backend complete");
-
-    // Modify the existing nodes based on the current data
-    const updatedNodes = nodes.map((node) => {
-      if (node.id === 'product_table') {
-        node.data = productData;
-        console.log("Updating product table data");
-      } else if (node.id === 'sales_table') {
-        node.data = salesData;
-        console.log("Updating sales table data");
-      } else if (node.id === 'output_table') {
-        node.data = outputData;
-        console.log("Updating output table data");
-      } else if (node.id === 'Merge') {
-        node.data = joinData;
-        console.log("Updating join table data");
-      }
-
-      return node;
+      setNodes(updatedNodes);
     });
-
-    setNodes(updatedNodes);
-  });
-}, []);
+  }, []);
 
 
   
-  const edgesWithUpdatedTypes = edges.map((edge) => {
-    if (edge.sourceHandle) {
-      const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
-      edge.type = edgeType;
-    }
+  // const edgesWithUpdatedTypes = edges.map((edge) => {
+  //   if (edge.sourceHandle) {
+  //     const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
+  //     edge.type = edgeType;
+  //   }
 
+  //   return edge;
+  // });
+
+  // const edgesWithUpdatedTypes = edges.map((edge) => {
+  //   console.log("Value of join data is:", join_data);
+  //   if (join_data.length != 0) 
+  //   {
+  //     if (edge.id === 'Custom_1-Merging') {
+  //       edge.label = join_data[0]["column_name"];
+  //     } else if (edge.id === 'Custom_2-Merging') {
+  //       edge.label = join_data[1]["column_name"];
+  //     }
+  // }
+
+  //   return edge;
+  // });
+
+  const edgesWithUpdatedTypes = edges.map((edge) => {
+    console.log("Value of join data is:", join_data);
+    if (join_data.length !== 0) {
+      if (edge.id === 'Custom_1-Merging') {
+        const custom1Columns = join_data
+          .filter((item) => item.table_name === 'product_table')
+          .map((item) => item.column_name)
+          .join(', ');
+        edge.label = custom1Columns;
+      } else if (edge.id === 'Custom_2-Merging') {
+        const custom2Columns = join_data
+          .filter((item) => item.table_name === 'sales_table')
+          .map((item) => item.column_name)
+          .join(', ');
+        edge.label = custom2Columns;
+      }
+    }
     return edge;
   });
-
-  const handleNodeClick = useCallback((event, node) => {
-    if (node.id === 'Merge') {
-      setIsModalOpen(true);
-      setSelectedNodeId(node.id);
-    }
-  }, []);
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const renderModal = () => {
-    if (!isModalOpen) return null;
-    console.log("Inside render Modal function")
-    // Use Ant Design Modal component directly here
-    return (
-      <Modal title="Data" open={isModalOpen} onOk={closeModal} onCancel={closeModal} footer={null}>
-        <div>
-          {Object.keys(query_data).map((key) => (
-            <div key={key} className="modal__text">
-              {key}: {query_data[key]}
-            </div>
-          ))}
-        </div>
-      </Modal>
-    );
-  };
+  
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
@@ -207,6 +153,7 @@ useEffect(() => {
         onInit={onInit}
         fitView
         attributionPosition="top-right"
+        proOptions={proOptions}
         nodeTypes={nodeTypes}
       >
         <MiniMap style={minimapStyle} zoomable pannable />

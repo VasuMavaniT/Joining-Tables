@@ -1,4 +1,33 @@
-const timeinterval = 10000;
+const timeinterval = 60000;
+
+// export const fetch_table_data = (table1, table2) => {
+//     // Construct the URL with the provided tableName
+//     const url = `http://127.0.0.1:7777/chatgpt?table1=${table1}&table2=${table2}`;
+  
+//     return new Promise((resolve, reject) => {
+//       // Simulate the asynchronous behavior of fetching data
+//       setTimeout(() => {
+//         // Assuming you have an API call here that returns data asynchronously
+//         fetch(url)
+//           .then((response) => response.json())
+//           .then((data) => {
+//             resolve(data); // Resolve the Promise with the data
+//           })
+//           .catch((error) => {
+//             reject(error); // Reject the Promise with the error, if any
+//           });
+//       }, timeinterval); // Simulate a delay before the data is returned
+//     });
+//   };
+
+export const fetch_table_data = async (table1, table2) => {
+    console.log("Fetching data"); 
+    const url = `http://127.0.0.1:7777/jsonify?table1=${table1}&table2=${table2}`;
+    
+    const response = await fetch(url);
+    return await response.json();
+};
+  
 
 export const fetch_product_data = () => {
     return new Promise((resolve, reject) => {
